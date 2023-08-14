@@ -12,30 +12,7 @@ public class Moveset
     /// <returns>List of position that include any single move</returns>
     public List<Position> SingleMove(ICheckersPiece piece)
     {
-        int row = piece.GetPosition().GetRow();
-        int col = piece.GetPosition().GetColumn();
-        List<Position> positions = new List<Position>();
-        if (piece.GetRank().Equals(Rank.Basic))
-        {
-            if (piece.GetPieceColor().Equals(PieceColor.Black))
-            {
-                positions.Add(new Position(row + 1, col + 1));
-                positions.Add(new Position(row + 1, col - 1));
-            }
-            else
-            {
-                positions.Add(new Position(row - 1, col + 1));
-                positions.Add(new Position(row - 1, col - 1));
-            }
-        }
-        else
-        {
-            positions.Add(new Position(row + 1, col + 1));
-            positions.Add(new Position(row + 1, col - 1));
-            positions.Add(new Position(row - 1, col + 1));
-            positions.Add(new Position(row - 1, col - 1));
-        }
-        return positions;
+        return GetPositions(piece, 1, 1);
     }
 
     /// <summary>
@@ -45,30 +22,7 @@ public class Moveset
     /// <returns>List of position that include any single jump move</returns>
     public List<Position> SingleJumpMove(ICheckersPiece piece)
     {
-        int row = piece.GetPosition().GetRow();
-        int col = piece.GetPosition().GetColumn();
-        List<Position> positions = new List<Position>();
-        if (piece.GetRank().Equals(Rank.Basic))
-        {
-            if (piece.GetPieceColor().Equals(PieceColor.Black))
-            {
-                positions.Add(new Position(row + 2, col + 2));
-                positions.Add(new Position(row + 2, col - 2));
-            }
-            else
-            {
-                positions.Add(new Position(row - 2, col + 2));
-                positions.Add(new Position(row - 2, col - 2));
-            }
-        }
-        else
-        {
-            positions.Add(new Position(row + 2, col + 2));
-            positions.Add(new Position(row + 2, col - 2));
-            positions.Add(new Position(row - 2, col + 2));
-            positions.Add(new Position(row - 2, col - 2));
-        }
-        return positions;
+        return GetPositions(piece, 2, 2);
     }
 
     /// <summary>
@@ -78,35 +32,60 @@ public class Moveset
     /// <returns>List of position that include any double jump move</returns>
     public List<Position> DoubleJumpMove(ICheckersPiece piece)
     {
+        List<Position> positions = GetPositions(piece, 4, 4);
+        if (piece.GetRank().Equals(Rank.King))
+        {
+            positions.Add(new Position(piece.GetPosition().GetRow() + 4, piece.GetPosition().GetColumn()));
+            positions.Add(new Position(piece.GetPosition().GetRow() - 4, piece.GetPosition().GetColumn()));
+            positions.Add(new Position(piece.GetPosition().GetRow(), piece.GetPosition().GetColumn() - 4));
+            positions.Add(new Position(piece.GetPosition().GetRow(), piece.GetPosition().GetColumn() + 4));
+        }
+        return positions;
+    }
+
+    /// <summary>
+    /// Retrieve list of position that include single move, single jump move, and double jump move
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="rowOffset"></param>
+    /// <param name="colOffset"></param>
+    /// <returns>List of position of generated moveset for a piece</returns>
+    private List<Position> GetPositions(ICheckersPiece piece, int rowOffset, int colOffset)
+    {
         int row = piece.GetPosition().GetRow();
         int col = piece.GetPosition().GetColumn();
         List<Position> positions = new List<Position>();
+
         if (piece.GetRank().Equals(Rank.Basic))
         {
             if (piece.GetPieceColor().Equals(PieceColor.Black))
             {
-                positions.Add(new Position(row + 4, col + 4));
-                positions.Add(new Position(row + 4, col - 4));
-                positions.Add(new Position(row + 4, col - 0));
+                positions.Add(new Position(row + rowOffset, col + colOffset));
+                positions.Add(new Position(row + rowOffset, col - colOffset));
+                if (Math.Abs(rowOffset) == 4)
+                {
+                    positions.Add(new Position(row + 4, col));
+                }
             }
             else
             {
-                positions.Add(new Position(row - 4, col + 4));
-                positions.Add(new Position(row - 4, col - 4));
-                positions.Add(new Position(row - 4, col - 0));
+                positions.Add(new Position(row - rowOffset, col + colOffset));
+                positions.Add(new Position(row - rowOffset, col - colOffset));
+                if (Math.Abs(rowOffset) == 4)
+                {
+                    positions.Add(new Position(row - 4, col));
+                }
             }
         }
         else
         {
-            positions.Add(new Position(row + 4, col + 4));
-            positions.Add(new Position(row + 4, col - 4));
-            positions.Add(new Position(row - 4, col + 4));
-            positions.Add(new Position(row - 4, col - 4));
-            positions.Add(new Position(row + 4, col));
-            positions.Add(new Position(row - 4, col));
-            positions.Add(new Position(row, col - 4));
-            positions.Add(new Position(row, col + 4));
+            positions.Add(new Position(row + rowOffset, col + colOffset));
+            positions.Add(new Position(row + rowOffset, col - colOffset));
+            positions.Add(new Position(row - rowOffset, col + colOffset));
+            positions.Add(new Position(row - rowOffset, col - colOffset));
         }
+
         return positions;
     }
+
 }
