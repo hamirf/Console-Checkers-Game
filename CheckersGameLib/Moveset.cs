@@ -32,15 +32,7 @@ public class Moveset
     /// <returns>List of position that include any double jump move</returns>
     public List<Position> DoubleJumpMove(ICheckersPiece piece)
     {
-        List<Position> positions = GetPositions(piece, 4, 4);
-        if (piece.GetRank().Equals(Rank.King))
-        {
-            positions.Add(new Position(piece.GetPosition().GetRow() + 4, piece.GetPosition().GetColumn()));
-            positions.Add(new Position(piece.GetPosition().GetRow() - 4, piece.GetPosition().GetColumn()));
-            positions.Add(new Position(piece.GetPosition().GetRow(), piece.GetPosition().GetColumn() - 4));
-            positions.Add(new Position(piece.GetPosition().GetRow(), piece.GetPosition().GetColumn() + 4));
-        }
-        return positions;
+        return GetPositions(piece, 4, 4);
     }
 
     /// <summary>
@@ -64,7 +56,7 @@ public class Moveset
                 positions.Add(new Position(row + rowOffset, col - colOffset));
                 if (Math.Abs(rowOffset) == 4)
                 {
-                    positions.Add(new Position(row + 4, col));
+                    positions.Add(new Position(row + rowOffset, col));
                 }
             }
             else
@@ -73,7 +65,7 @@ public class Moveset
                 positions.Add(new Position(row - rowOffset, col - colOffset));
                 if (Math.Abs(rowOffset) == 4)
                 {
-                    positions.Add(new Position(row - 4, col));
+                    positions.Add(new Position(row - rowOffset, col));
                 }
             }
         }
@@ -83,6 +75,16 @@ public class Moveset
             positions.Add(new Position(row + rowOffset, col - colOffset));
             positions.Add(new Position(row - rowOffset, col + colOffset));
             positions.Add(new Position(row - rowOffset, col - colOffset));
+            if (Math.Abs(rowOffset) == 4)
+            {
+                positions.Add(new Position(row + rowOffset, col));
+                positions.Add(new Position(row - rowOffset, col));
+            }
+            else if (Math.Abs(colOffset) == 4)
+            {
+                positions.Add(new Position(row, col + colOffset));
+                positions.Add(new Position(row, col - colOffset));
+            }
         }
 
         return positions;

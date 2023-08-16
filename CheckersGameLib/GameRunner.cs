@@ -162,7 +162,6 @@ public partial class GameRunner
                 {
                     if (!piece.GetIsEaten())
                     {
-                        logger.Info("Retrieve a piece success. This piece is on board.");
                         return piece;
                     }
                 }
